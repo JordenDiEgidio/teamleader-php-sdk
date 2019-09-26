@@ -9,6 +9,7 @@ use Teamleader\Entities\General\User;
 use Teamleader\Entities\Invoicing\Invoice;
 use JsonSerializable;
 use Teamleader\Exceptions\ApiException;
+use Teamleader\Entities\Products\Product;
 
 /**
  * Class Model
@@ -23,6 +24,7 @@ abstract class Model implements JsonSerializable
     protected $references = [
         Contact::TYPE => Contact::class,
         Company::TYPE => Company::class,
+        Product::TYPE => Product::class,
         Deal::TYPE => Deal::class,
         Invoice::TYPE => Invoice::class,
         User::TYPE => User::class,

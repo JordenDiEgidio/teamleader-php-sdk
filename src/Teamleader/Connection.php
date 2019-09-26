@@ -5,6 +5,7 @@ namespace Teamleader;
 use Exception;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Client as GuzzleHttpClient;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -355,7 +356,15 @@ class Connection
             }
 
             $request = $this->createRequest('GET', $this->formatUrl($url, 'get'), json_encode($params));
-            $response = $this->client()->send($request);
+
+            try {
+                $response = $this->client()->send($request);
+            } catch (RequestException $e) {
+                if ($e->getCode() == '401') {
+                    $this->acquireRefreshToken();
+                    $this->get($url, $params, $fetchAll);
+                }
+            }
 
             $json = $this->parseResponse($response);
 
